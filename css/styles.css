@@ -1,0 +1,41 @@
+
+/* General page styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
+}
+
+/* Welcome section */
+.homepage {
+    background-color: #e8f1ff;
+    padding: 100px 20px;
+}
+
+.homepage h1 {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.homepage p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+/* Section headings */
+section h2 {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 22px;
+    border-radius: 6px;
+}
+
+/* Footer */
+footer {
+    margin-top: 40px;
+}
