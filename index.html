@@ -4,12 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>After-School Club</title>
+    <title>AfterSchool+</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
 
-    <!-- CSS -->
+    <!-- Font Awesome icons -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- CSS file -->
     <link rel="stylesheet" href="css/styles.css">
 
     <!-- Vue.js -->
@@ -18,122 +27,522 @@
 
 <body>
 
-    <!-- Vue application -->
-    <div id="app">
+<div id="app">
 
-        <!-- Navigation Bar -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="index.html">
-                    {{ clubName }}
-                </a>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
 
-                <div class="navbar-nav ms-auto">
+            <a class="navbar-brand" href="#">
+                <i class="fa-solid fa-graduation-cap"></i>
+                AfterSchool+
+            </a>
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarMenu"
+                aria-controls="navbarMenu"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMenu">
+                <div class="navbar-nav ms-auto align-items-lg-center">
+
                     <a class="nav-link" href="#home">Home</a>
-                    <a class="nav-link" href="#lessons">Lessons</a>
-                    <a class="nav-link" href="#about">About Us</a>
+                    <a class="nav-link" href="#lessons">Activities</a>
+
+                    <button
+                        class="btn btn-primary ms-lg-3 mt-2 mt-lg-0"
+                        @click="showCart = !showCart"
+                        :disabled="cart.length === 0"
+                    >
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        Cart ({{ cart.length }})
+                    </button>
+
                 </div>
             </div>
-        </nav>
 
-        <!-- Welcome Section -->
-        <section id="home" class="homepage text-center">
-            <div class="container">
-                <h1>{{ welcomeMessage }}</h1>
+        </div>
+    </nav>
 
-                <p>
-                    Discover fun activities, learn new skills and make friends!
-                </p>
+    <!-- Homepage welcome section -->
+    <section id="home" class="homepage text-center">
+        <div class="container">
 
-                <a href="#lessons" class="btn btn-primary">
-                    Explore Our Lessons
-                </a>
-            </div>
-        </section>
-
-        <!-- Lessons Section -->
-        <section id="lessons" class="container my-5 text-center">
-            <h2>Our Lessons</h2>
-
-            <p>We currently offer {{ lessons.length }} activities.</p>
-
-            <div class="row">
-                <div
-                    class="col-md-4 mb-3"
-                    v-for="lesson in lessons"
-                    :key="lesson.id"
-                >
-                    <div class="card p-3 h-100">
-                        <h3>{{ lesson.topic }}</h3>
-
-                        <p>Location: {{ lesson.location }}</p>
-
-                        <p>Price: £{{ lesson.price }}</p>
-
-                        <p>Spaces available: {{ lesson.space }}</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="container my-5 text-center">
-            <h2>About Us</h2>
+            <h1>Welcome to AfterSchool+</h1>
 
             <p>
-                We offer enjoyable activities to help children develop
-                their creativity, confidence and skills.
+                Discover exciting activities, develop new skills
+                and make friends along the way.
             </p>
-        </section>
 
-        <!-- Footer -->
-        <footer class="bg-dark text-white text-center py-3">
-            <p class="mb-0">&copy; 2026 After-School Club</p>
-        </footer>
+            <a href="#lessons" class="btn btn-primary">
+                Explore Activities
+            </a>
 
-    </div>
+        </div>
+    </section>
 
-    <!-- Vue application code -->
-    <script>
-        const { createApp } = Vue;
+    <!-- Activities section -->
+    <main id="lessons" class="container my-5">
 
-        createApp({
-            data() {
-                return {
-                    clubName: "After-School Club",
+        <div class="text-center mb-4">
+            <h2>Explore Our Activities</h2>
 
-                    welcomeMessage: "Welcome to After-School Club!",
+            <p>
+                Choose from our range of after-school activities.
+            </p>
+        </div>
 
-                    lessons: [
-                        {
-                            id: 1,
-                            topic: "Mathematics",
-                            location: "Hendon",
-                            price: 10,
-                            space: 5
-                        },
-                        {
-                            id: 2,
-                            topic: "Art and Drawing",
-                            location: "Colindale",
-                            price: 8,
-                            space: 5
-                        },
-                        {
-                            id: 3,
-                            topic: "Football",
-                            location: "Brent Cross",
-                            price: 12,
-                            space: 5
-                        }
-                    ]
-                };
+        <!-- Sorting controls -->
+        <div class="row g-3 mb-4">
+
+            <div class="col-md-6">
+                <label for="sortBy" class="form-label">
+                    Sort activities by:
+                </label>
+
+                <select
+                    id="sortBy"
+                    class="form-select"
+                    v-model="sortBy"
+                >
+                    <option value="topic">Topic</option>
+                    <option value="location">Location</option>
+                    <option value="price">Price</option>
+                    <option value="space">Available spaces</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label for="sortOrder" class="form-label">
+                    Sort order:
+                </label>
+
+                <select
+                    id="sortOrder"
+                    class="form-select"
+                    v-model="sortOrder"
+                >
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+
+        </div>
+
+        <!-- Activity cards -->
+        <div class="row">
+
+            <div
+                class="col-md-6 col-lg-4 mb-4"
+                v-for="lesson in sortedLessons"
+                :key="lesson.id"
+            >
+
+                <div class="card h-100 shadow-sm p-3">
+
+                    <!-- Display an image if provided, otherwise an icon -->
+                    <img
+                        v-if="lesson.image"
+                        :src="'css/images/' + lesson.image"
+                        :alt="lesson.topic"
+                        class="lesson-image"
+                    >
+
+                    <div v-else class="text-center my-3">
+                        <i :class="lesson.icon" class="lesson-icon"></i>
+                    </div>
+
+                    <div class="card-body">
+
+                        <h3 class="card-title">
+                            {{ lesson.topic }}
+                        </h3>
+
+                        <p>
+                            <i class="fa-solid fa-location-dot"></i>
+                            {{ lesson.location }}
+                        </p>
+
+                        <p>
+                            <i class="fa-solid fa-sterling-sign"></i>
+                            {{ lesson.price }}
+                        </p>
+
+                        <p>
+                            <i class="fa-solid fa-users"></i>
+                            Spaces available: {{ lesson.space }}
+                        </p>
+
+                        <button
+                            class="btn btn-primary w-100"
+                            @click="addToCart(lesson)"
+                            :disabled="lesson.space === 0"
+                        >
+                            {{
+                                lesson.space === 0
+                                ? 'Fully Booked'
+                                : 'Add to Cart'
+                            }}
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Shopping cart -->
+    <section
+        v-if="showCart"
+        class="container my-5"
+        id="cart"
+    >
+
+        <h2>Your Shopping Cart</h2>
+
+        <p v-if="cart.length === 0">
+            Your cart is empty.
+        </p>
+
+        <div
+            v-for="item in cart"
+            :key="item.cartId"
+            class="card p-3 mb-3"
+        >
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h5>{{ item.topic }}</h5>
+                    <p class="mb-0">
+                        £{{ item.price }}
+                    </p>
+                </div>
+
+                <button
+                    class="btn btn-danger"
+                    @click="removeFromCart(item)"
+                >
+                    Remove
+                </button>
+
+            </div>
+
+        </div>
+
+        <h4 v-if="cart.length > 0">
+            Total: £{{ cartTotal.toFixed(2) }}
+        </h4>
+
+        <!-- Checkout form -->
+        <div v-if="cart.length > 0" class="card p-4 mt-4">
+
+            <h3>Checkout</h3>
+
+            <form @submit.prevent="checkout">
+
+                <div class="mb-3">
+                    <label for="customerName" class="form-label">
+                        Full name
+                    </label>
+
+                    <input
+                        id="customerName"
+                        type="text"
+                        class="form-control"
+                        v-model="customerName"
+                        required
+                        pattern="[A-Za-z ]+"
+                        title="Enter letters and spaces only."
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label for="phoneNumber" class="form-label">
+                        Phone number
+                    </label>
+
+                    <input
+                        id="phoneNumber"
+                        type="tel"
+                        class="form-control"
+                        v-model="phoneNumber"
+                        required
+                        pattern="[0-9]+"
+                        title="Enter digits only."
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Confirm Order
+                </button>
+
+            </form>
+
+            <p v-if="confirmationMessage" class="alert alert-success mt-3">
+                {{ confirmationMessage }}
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- About section -->
+    <section id="about" class="container my-5 text-center">
+
+        <h2>About Us</h2>
+
+        <p>
+            We offer enjoyable activities that help children develop
+            their creativity, confidence and skills.
+        </p>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+        <p class="mb-0">
+            &copy; 2026 AfterSchool+. All rights reserved.
+        </p>
+    </footer>
+
+</div>
+
+<!-- Vue.js application -->
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+
+        data() {
+            return {
+                sortBy: "topic",
+                sortOrder: "asc",
+
+                showCart: false,
+                cart: [],
+                nextCartId: 1,
+
+                customerName: "",
+                phoneNumber: "",
+                confirmationMessage: "",
+
+                lessons: [
+                    {
+                        id: 1,
+                        topic: "Mathematics",
+                        location: "Hendon",
+                        price: 10,
+                        space: 5,
+                        icon: "fa-solid fa-calculator",
+                        image: "math1.jpg"
+                    },
+                    {
+                        id: 2,
+                        topic: "Art and Drawing",
+                        location: "Colindale",
+                        price: 8,
+                        space: 5,
+                        icon: "fa-solid fa-palette",
+                        image: "art1.jpg"
+                    },
+                    {
+                        id: 3,
+                        topic: "Football",
+                        location: "Brent Cross",
+                        price: 12,
+                        space: 5,
+                        icon: "fa-solid fa-futbol",
+                        image: "football1.jpg"
+                    },
+                    {
+                        id: 4,
+                        topic: "Music",
+                        location: "Hendon",
+                        price: 15,
+                        space: 5,
+                        icon: "fa-solid fa-music",
+                        image: "music1.jpg"
+                    },
+                    {
+                        id: 5,
+                        topic: "Science",
+                        location: "Edgware",
+                        price: 10,
+                        space: 5,
+                        icon: "fa-solid fa-flask",
+                        image: "science1.jpg"
+                    },
+                    {
+                        id: 6,
+                        topic: "Coding",
+                        location: "Colindale",
+                        price: 18,
+                        space: 5,
+                        icon: "fa-solid fa-laptop-code",
+                        image: "code1.jpg"
+                    },
+                    {
+                        id: 7,
+                        topic: "Dance",
+                        location: "Finchley",
+                        price: 9,
+                        space: 5,
+                        icon: "fa-solid fa-person",
+                        image: "dance1.jpg"
+                    },
+                    {
+                        id: 8,
+                        topic: "Swimming",
+                        location: "Hendon",
+                        price: 14,
+                        space: 5,
+                        icon: "fa-solid fa-person-swimming",
+                        image: "swim1.jpg"
+                    },
+                    {
+                        id: 9,
+                        topic: "Drama",
+                        location: "Edgware",
+                        price: 11,
+                        space: 5,
+                        icon: "fa-solid fa-masks-theater",
+                        image: "drama1.jpg"
+                    },
+                    {
+                        id: 10,
+                        topic: "Chess",
+                        location: "Finchley",
+                        price: 7,
+                        space: 5,
+                        icon: "fa-solid fa-chess",
+                        image: "chess1.jpg"
+                    }
+                ]
+            };
+        },
+
+        computed: {
+
+            // Return the activities in the selected order.
+            sortedLessons() {
+                return [...this.lessons].sort((a, b) => {
+
+                    let result;
+
+                    if (
+                        this.sortBy === "price" ||
+                        this.sortBy === "space"
+                    ) {
+                        result = a[this.sortBy] - b[this.sortBy];
+                    } else {
+                        result = a[this.sortBy].localeCompare(b[this.sortBy]);
+                    }
+
+                    return this.sortOrder === "asc"
+                        ? result
+                        : -result;
+                });
+            },
+
+            // Calculate the total cost of the cart.
+            cartTotal() {
+                return this.cart.reduce(
+                    (total, item) => total + item.price,
+                    0
+                );
             }
-        }).mount("#app");
-    </script>
+        },
 
-    <!-- Bootstrap JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        methods: {
+
+            // Add one activity space to the cart.
+            addToCart(lesson) {
+
+                if (lesson.space > 0) {
+
+                    this.cart.push({
+                        cartId: this.nextCartId++,
+                        lessonId: lesson.id,
+                        topic: lesson.topic,
+                        price: lesson.price
+                    });
+
+                    lesson.space--;
+
+                    this.confirmationMessage = "";
+                }
+            },
+
+            // Remove one cart item and restore its space.
+            removeFromCart(item) {
+
+                const index = this.cart.findIndex(
+                    cartItem => cartItem.cartId === item.cartId
+                );
+
+                if (index !== -1) {
+
+                    const lesson = this.lessons.find(
+                        lesson => lesson.id === item.lessonId
+                    );
+
+                    if (lesson) {
+                        lesson.space++;
+                    }
+
+                    this.cart.splice(index, 1);
+                }
+
+                this.confirmationMessage = "";
+            },
+
+            // Validate the customer details and confirm the order.
+            checkout() {
+
+                const namePattern = /^[A-Za-z ]+$/;
+                const phonePattern = /^[0-9]+$/;
+
+                if (!namePattern.test(this.customerName.trim())) {
+                    this.confirmationMessage =
+                        "Please enter a valid name using letters only.";
+                    return;
+                }
+
+                if (!phonePattern.test(this.phoneNumber)) {
+                    this.confirmationMessage =
+                        "Please enter a phone number using digits only.";
+                    return;
+                }
+
+                this.confirmationMessage =
+                    "Thank you, " + this.customerName.trim() +
+                    "! Your order has been confirmed.";
+
+                this.cart = [];
+                this.customerName = "";
+                this.phoneNumber = "";
+                this.showCart = false;
+            }
+        }
+
+    }).mount("#app");
+</script>
+
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
