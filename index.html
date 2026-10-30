@@ -53,17 +53,28 @@
             <div class="collapse navbar-collapse" id="navbarMenu">
                 <div class="navbar-nav ms-auto align-items-lg-center">
 
-                    <a class="nav-link" href="#home">Home</a>
-                    <a class="nav-link" href="#lessons">Activities</a>
+                    <a
+    class="nav-link"
+    href="#home"
+    @click="showCart = false"
+>
+    Home
+</a>
+                    <a
+    class="nav-link"
+    href="#lessons"
+    @click="showCart = false"
+>
+    Activities
+</a>
 
                     <button
-                        class="btn btn-primary ms-lg-3 mt-2 mt-lg-0"
-                        @click="showCart = !showCart"
-                        :disabled="cart.length === 0"
-                    >
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        Cart ({{ cart.length }})
-                    </button>
+                      class="btn btn-primary ms-lg-3 mt-2 mt-lg-0"
+                      @click="showCart = true"
+>
+                      <i class="fa-solid fa-cart-shopping"></i>
+                    Basket ({{ cart.length }})
+                   </button>
 
                 </div>
             </div>
@@ -90,7 +101,11 @@
     </section>
 
     <!-- Activities section -->
-    <main id="lessons" class="container my-5">
+    <main
+    id="lessons"
+    class="container my-5"
+    v-if="!showCart"
+    > 
 
         <div class="text-center mb-4">
             <h2>Explore Our Activities</h2>
@@ -204,11 +219,118 @@
     </main>
 
     <!-- Shopping cart -->
-    <section
-        v-if="showCart"
-        class="container my-5"
-        id="cart"
-    >
+   <!-- Basket section -->
+<section
+    v-if="showCart"
+    class="container my-5"
+    id="cart"
+>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Your Basket</h2>
+
+        <button
+            class="btn btn-outline-primary"
+            @click="showCart = false"
+        >
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Activities
+        </button>
+    </div>
+
+    <!-- Empty basket -->
+    <div v-if="cart.length === 0" class="card p-4 text-center">
+        <i class="fa-solid fa-cart-shopping lesson-icon mb-3"></i>
+
+        <h4>Your basket is empty</h4>
+
+        <p>Add an activity to get started.</p>
+
+        <button
+            class="btn btn-primary"
+            @click="showCart = false"
+        >
+            Browse Activities
+        </button>
+    </div>
+
+    <!-- Basket items -->
+    <div v-else>
+
+        <div
+            v-for="item in cart"
+            :key="item.cartId"
+            class="card p-3 mb-3"
+        >
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h5>{{ item.topic }}</h5>
+                    <p class="mb-0">Price: £{{ item.price }}</p>
+                </div>
+
+                <button
+                    class="btn btn-danger"
+                    @click="removeFromCart(item)"
+                >
+                    <i class="fa-solid fa-trash"></i>
+                    Remove
+                </button>
+
+            </div>
+        </div>
+
+        <!-- Total -->
+        <div class="card p-4 mt-4">
+            <h4>Total: £{{ cartTotal.toFixed(2) }}</h4>
+
+            <hr>
+
+            <!-- Checkout form -->
+            <h3>Checkout</h3>
+
+            <form @submit.prevent="checkout">
+
+                <div class="mb-3">
+                    <label for="customerName" class="form-label">
+                        Full Name
+                    </label>
+
+                    <input
+                        id="customerName"
+                        type="text"
+                        class="form-control"
+                        v-model="customerName"
+                        required
+                        pattern="[A-Za-z ]+"
+                        title="Enter letters and spaces only."
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label for="phoneNumber" class="form-label">
+                        Phone Number
+                    </label>
+
+                    <input
+                        id="phoneNumber"
+                        type="tel"
+                        class="form-control"
+                        v-model="phoneNumber"
+                        required
+                        pattern="[0-9]+"
+                        title="Enter digits only."
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Confirm Order
+                </button>
+
+            </form>
+        </div>
+
+    </div>
+</section>
 
         <h2>Your Shopping Cart</h2>
 
@@ -334,7 +456,6 @@
                 showCart: false,
                 cart: [],
                 nextCartId: 1,
-
                 customerName: "",
                 phoneNumber: "",
                 confirmationMessage: "",
